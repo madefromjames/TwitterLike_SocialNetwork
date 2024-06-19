@@ -1,5 +1,23 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
-    TODO
+
+    <h2 class="mx-3"><strong>All Posts</strong></h2>
+    
+    <div class="mx-3 border" id="new_post_view">
+        <div class="m-3">
+            <form action="" id="form-post">
+                <div class="form-group">
+                    <label><strong>New Post</strong></label>
+                    <textarea class="form-control" name="" id="form-content"></textarea>
+                    <button class="btn btn-primary btn-sm mt-1">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}
