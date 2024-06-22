@@ -7,10 +7,11 @@
     
     <div class="mx-3 border" id="new_post_view">
         <div class="m-3">
-            <form action="" id="form-post">
+            <form action="{% url 'new_post' %}" id="form-post" method="post">
+                {% csrf_token %}
                 <div class="form-group">
                     <label><strong>New Post</strong></label>
-                    <textarea class="form-control" name="" id="form-content"></textarea>
+                    <textarea class="form-control" name="content" id="form-content"></textarea>
                     <button class="btn btn-primary btn-sm mt-1">Post</button>
                 </div>
             </form>

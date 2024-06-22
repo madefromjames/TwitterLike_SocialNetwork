@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
@@ -12,7 +12,14 @@ def index(request):
         return render(request, "network/index.html")
     else:
         return HttpResponseRedirect(reverse("login"))
-
+    
+def new_post(request):
+    if request.method == "POST":
+        content = request.POST["content"]
+        user = request.user
+        post = Post(content=content, user=user)
+        post.save()
+        return HttpResponseRedirect(reverse("index"))
 
 def login_view(request):
     if request.method == "POST":
