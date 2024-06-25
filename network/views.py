@@ -20,14 +20,24 @@ def profile(request, user_id):
     user = User.objects.get(pk=user_id)
     all_post = Post.objects.filter(user=user).order_by('-date')
 
-    following = Follow.objects.get(user=user)
-    # followers = Follow.objects.get(user_follow=user)
+    following = Follow.objects.filter(user=user)
+    followers = Follow.objects.filter(user_follow=user)
+
+    isFollowing = False
+    try:
+        checkFollow = followers.filter(user=request.user)
+        if checkFollow.exists():
+            isFollowing = True
+    except User.DoesNotExist():
+        isFollowing = False
 
     if request.user.is_authenticated:
         return render(request, "network/profile.html", {
             "all_post": all_post,
             "following": following,
-            # "followers": followers
+            "followers": followers,
+            "isFollowing": isFollowing,
+            "user_profile": user
         })
     
 def new_post(request):
