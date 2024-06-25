@@ -4,19 +4,36 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Post
+from .models import User, Post, Follow
 
 
 def index(request):
+    all_post = Post.objects.all().order_by('-date')
     if request.user.is_authenticated:
-        return render(request, "network/index.html")
+        return render(request, "network/index.html", {
+            "all_post": all_post
+        })
     else:
         return HttpResponseRedirect(reverse("login"))
+    
+def profile(request, user_id):
+    user = User.objects.get(pk=user_id)
+    all_post = Post.objects.filter(user=user).order_by('-date')
+
+    following = Follow.objects.get(user=user)
+    # followers = Follow.objects.get(user_follow=user)
+
+    if request.user.is_authenticated:
+        return render(request, "network/profile.html", {
+            "all_post": all_post,
+            "following": following,
+            # "followers": followers
+        })
     
 def new_post(request):
     if request.method == "POST":
         content = request.POST["content"]
-        user = request.user
+        user = User.objects.get(pk=request.user.id)
         post = Post(content=content, user=user)
         post.save()
         return HttpResponseRedirect(reverse("index"))
