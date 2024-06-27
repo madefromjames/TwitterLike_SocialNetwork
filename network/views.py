@@ -22,11 +22,9 @@ def profile(request, user_id):
     followers = Follow.objects.filter(followed=user)
 
     try:
-        checkFollow = followers.filter(follower=User.objects.get(request.user.id))
-        if len(checkFollow) != 0:
-            isFollowing = True
-        else: isFollowing = False
-    except:
+        checkFollow = Follow.objects.get(follower=request.user, followed=user)
+        isFollowing = True
+    except Follow.DoesNotExist:
         isFollowing = False
     
     return render(request, "network/profile.html", {
