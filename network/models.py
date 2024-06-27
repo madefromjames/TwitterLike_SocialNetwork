@@ -15,8 +15,8 @@ class Post(models.Model):
         return f"{self.user} posted {self.content} on {self.date.strftime('%b %d %Y, %H:%M:%S')}"
     
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_follower")
-    user_follow = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_followed")
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+    followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
 
     def __str__(self):
-        return f"{self.user} is following {self.user_follow}"
+        return f"{self.follower} is following {self.followed}"

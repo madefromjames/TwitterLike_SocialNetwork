@@ -3,12 +3,30 @@
 
 {% block body %}
 
-    <h2 class="mx-3"><strong>All Posts</strong></h2>
+    <h2 class="mx-3"><strong>{{ username }}</strong></h2>
     
     <ul class="list-group list-group-horizontal mx-3">
         <li class="list-group-item list-group-item-secondary">{{ following.count }} Following</li>
         <li class="list-group-item list-group-item-secondary">{{ followers.count }} Followers</li>
+        {% if user.is_authenticated %}
+            {% if user != user_profile %}
+                {% if isFollowing %}
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="follow" value="{{ user_profile }}">
+                        <input type="submit" value="Unfollow">
+                    </form>
+                {% else %}
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="follow" value="{{ user_profile }}">
+                        <input type="submit" value="Follow">
+                    </form>
+                {% endif %}
+            {% endif %}
+        {% endif %}
     </ul>
+    
 
     <div class="all_post mx-3 mt-3">
         {% for post in all_post %}

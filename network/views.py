@@ -9,36 +9,34 @@ from .models import User, Post, Follow
 
 def index(request):
     all_post = Post.objects.all().order_by('-date')
-    if request.user.is_authenticated:
-        return render(request, "network/index.html", {
-            "all_post": all_post
-        })
-    else:
-        return HttpResponseRedirect(reverse("login"))
+    
+    return render(request, "network/index.html", {
+        "all_post": all_post
+    })
     
 def profile(request, user_id):
     user = User.objects.get(pk=user_id)
     all_post = Post.objects.filter(user=user).order_by('-date')
 
-    following = Follow.objects.filter(user=user)
-    followers = Follow.objects.filter(user_follow=user)
+    following = Follow.objects.filter(follower=user)
+    followers = Follow.objects.filter(followed=user)
 
-    isFollowing = False
     try:
-        checkFollow = followers.filter(user=request.user)
-        if checkFollow.exists():
+        checkFollow = followers.filter(follower=User.objects.get(request.user.id))
+        if len(checkFollow) != 0:
             isFollowing = True
-    except User.DoesNotExist():
+        else: isFollowing = False
+    except:
         isFollowing = False
-
-    if request.user.is_authenticated:
-        return render(request, "network/profile.html", {
-            "all_post": all_post,
-            "following": following,
-            "followers": followers,
-            "isFollowing": isFollowing,
-            "user_profile": user
-        })
+    
+    return render(request, "network/profile.html", {
+        "all_post": all_post,
+        "username": user.username,
+        "following": following,
+        "followers": followers,
+        "isFollowing": isFollowing,
+        "user_profile": user
+    })
     
 def new_post(request):
     if request.method == "POST":
