@@ -10,9 +10,12 @@ from .models import User, Post, Follow
 def index(request):
     all_post = Post.objects.all().order_by('-date')
     
-    return render(request, "network/index.html", {
-        "all_post": all_post
-    })
+    if request.user.is_authenticated:
+        return render(request, "network/index.html", {
+            "all_post": all_post
+        })
+    else:
+        return render(request, "network/login.html")
     
 def profile(request, user_id):
     user = User.objects.get(pk=user_id)

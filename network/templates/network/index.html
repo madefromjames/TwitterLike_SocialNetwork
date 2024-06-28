@@ -12,7 +12,7 @@
                 <div class="form-group">
                     <label><strong>New Post</strong></label>
                     <textarea class="form-control" name="content" id="form-content"></textarea>
-                    <button class="btn btn-primary btn-sm mt-1">Post</button>
+                    <button class="btn btn-primary mt-2">Post</button>
                 </div>
             </form>
         </div>
@@ -22,7 +22,7 @@
         {% for post in all_post %}
         <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title"><strong>{{ post.user }}</strong></h5>
+              <a href="{% url 'profile' post.user.id %}"><strong>@{{ post.user }}</strong></a>
               <p class="card-text">{{ post.content }}</p>
               <p class="card-text text-muted">{{ post.date }}</p>
             </div>

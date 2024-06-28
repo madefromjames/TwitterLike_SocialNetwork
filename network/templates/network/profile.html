@@ -3,38 +3,38 @@
 
 {% block body %}
 
-    <h2 class="mx-3"><strong>{{ username }}</strong></h2>
+    <h2 class="mx-3"><strong>{{ username }}</strong><small> profile</small></h2>
     
-    <ul class="list-group list-group-horizontal mx-3">
-        <li class="list-group-item list-group-item-secondary">{{ following.count }} Following</li>
-        <li class="list-group-item list-group-item-secondary">{{ followers.count }} Followers</li>
+    <div class="d-flex align-items-center mx-3">
+        <p class="blockquote m-3">{{ following.count }} <i>Following</i></p>
+        <p class="blockquote m-3">{{ followers.count }} <i>Followers</i></p>
         {% if user.is_authenticated %}
             {% if user != user_profile %}
                 {% if isFollowing %}
                     <form action="" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="follow" value="{{ user_profile }}">
-                        <input type="submit" value="Unfollow">
+                        <input class="btn btn-danger mx-3" type="submit" value="Unfollow">
                     </form>
                 {% else %}
                     <form action="" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="follow" value="{{ user_profile }}">
-                        <input type="submit" value="Follow">
+                        <input class="btn btn-success mx-3" type="submit" value="Follow">
                     </form>
                 {% endif %}
             {% endif %}
         {% endif %}
-    </ul>
+    </div>
     
 
     <div class="all_post mx-3 mt-3">
         {% for post in all_post %}
         <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title"><strong>{{ post.user }}</strong></h5>
-              <p class="card-text">{{ post.content }}</p>
-              <p class="card-text text-muted">{{ post.date }}</p>
+                <a href="{% url 'profile' post.user.id %}"><strong>@{{ post.user }}</strong></a>
+                <p class="card-text">{{ post.content }}</p>
+                <p class="card-text text-muted">{{ post.date }}</p>
             </div>
           </div>
         {% endfor %}
