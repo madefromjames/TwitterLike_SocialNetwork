@@ -38,6 +38,18 @@ def profile(request, user_id):
         "isFollowing": isFollowing,
         "user_profile": user
     })
+
+def follow(request):
+    userFollow = request.POST.get('follow')
+    current_user = User.objects.get(pk=request.user.id)
+    followData = User.objects.get(username=userFollow)
+    f = Follow(follower=current_user, followed=followData)
+    f.save()
+    user_id = followData.id
+    return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
+
+def unfollow(request):
+    return
     
 def new_post(request):
     if request.method == "POST":
