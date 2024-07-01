@@ -39,6 +39,22 @@ def profile(request, user_id):
         "user_profile": user
     })
 
+def following(request):
+    user = User.objects.get(pk=request.user.id)
+    followData = Follow.objects.filter(follower=user)
+    all_post = Post.objects.all().order_by('-date')
+
+    followingPost = []
+
+    for post in all_post:
+        for person in followData:
+            if person.followed == post.user:
+                followingPost.append(post)
+
+    return render(request, "network/following.html", {
+            "followingPost": followingPost
+        })
+
 def follow(request):
     userFollow = request.POST.get('follow')
     current_user = User.objects.get(pk=request.user.id)
@@ -49,7 +65,13 @@ def follow(request):
     return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
 
 def unfollow(request):
-    return
+    userFollow = request.POST.get('unfollow')
+    current_user = User.objects.get(pk=request.user.id)
+    followData = User.objects.get(username=userFollow)
+    f = Follow.objects.get(follower=current_user, followed=followData)
+    f.delete()
+    user_id = followData.id
+    return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
     
 def new_post(request):
     if request.method == "POST":
