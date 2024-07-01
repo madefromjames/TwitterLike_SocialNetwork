@@ -3,16 +3,21 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import User, Post, Follow
 
 
 def index(request):
     all_post = Post.objects.all().order_by('-date')
+
+    paginator = Paginator(all_post, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     if request.user.is_authenticated:
         return render(request, "network/index.html", {
-            "all_post": all_post
+            "page_obj": page_obj
         })
     else:
         return render(request, "network/login.html")
@@ -29,9 +34,13 @@ def profile(request, user_id):
         isFollowing = True
     except Follow.DoesNotExist:
         isFollowing = False
+
+    paginator = Paginator(all_post, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     return render(request, "network/profile.html", {
-        "all_post": all_post,
+        "page_obj": page_obj,
         "username": user.username,
         "following": following,
         "followers": followers,
@@ -51,8 +60,12 @@ def following(request):
             if person.followed == post.user:
                 followingPost.append(post)
 
+    paginator = Paginator(followingPost, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/following.html", {
-            "followingPost": followingPost
+            "page_obj": page_obj
         })
 
 def follow(request):
