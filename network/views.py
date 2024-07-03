@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+import json
 
 from .models import User, Post, Follow
 
@@ -93,6 +94,12 @@ def new_post(request):
         post = Post(content=content, user=user)
         post.save()
         return HttpResponseRedirect(reverse("index"))
+
+@csrf_exempt
+def editPost(request, postId):
+    if request.method == 'PUT':
+        return
+    return
 
 def login_view(request):
     if request.method == "POST":
