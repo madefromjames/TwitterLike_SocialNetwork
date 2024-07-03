@@ -3,6 +3,13 @@
 
 {% block body %}
 
+    <script>
+        function submitHandler(id) {
+            const textArea = document.querySelector(`#textarea${id}`).value
+            console.log(textArea)
+        }
+    </script>
+
     <h2 class="mx-3"><strong>All Posts</strong></h2>
     
     <div class="mx-3 border" id="new_post_view">
@@ -27,21 +34,21 @@
               <p class="card-text text-muted">{{ post.date }}</p>
               {% if user == post.user %}
                 <div class="align-items-end">
-                    <button class="btn btn-secondary btn-sm">Edit</button>
+                    <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ post.id }}">Edit</button>
                 </div>
-                <div class="modal" tabindex="-1">
+                <div class="modal fade" id="editModal{{ post.id }}" tabindex="-1" aria-labelledby="editModal{{ post.id }}" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title">Modal title</h5>
+                          <h5 class="modal-title">Edit Post</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                          <p>Modal body text goes here.</p>
+                            <textarea rows="5" name="textarea{{ post.content }}" id="textarea{{ post.id }}" class="form-control">{{ post.content }}</textarea>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary">Save changes</button>
+                          <button type="button" class="btn btn-primary" onclick="submitHandler({{ post.id }})">Save changes</button>
                         </div>
                       </div>
                     </div>
