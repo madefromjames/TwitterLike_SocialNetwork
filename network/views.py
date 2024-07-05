@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 from .models import User, Post, Follow
@@ -98,7 +99,9 @@ def new_post(request):
 @csrf_exempt
 def editPost(request, postId):
     if request.method == 'PUT':
-        return
+        data = json.loads(request.body)
+        editPost = Post.objects.get(pk=postId)
+        editPost.content = data["content"]
     return
 
 def login_view(request):
