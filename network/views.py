@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -100,9 +100,11 @@ def new_post(request):
 def editPost(request, postId):
     if request.method == 'PUT':
         data = json.loads(request.body)
+        print(data)
         editPost = Post.objects.get(pk=postId)
         editPost.content = data["content"]
-    return
+        editPost.save()
+        return JsonResponse({'message': 'Edit successful', 'data': data['content']})
 
 def login_view(request):
     if request.method == "POST":
