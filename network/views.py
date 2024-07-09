@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from .models import User, Post, Follow
+from .models import User, Post, Follow, Like
 
 
 def index(request):
@@ -17,9 +17,14 @@ def index(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
+    likes = Like.objects.filter(user=request.user).values_list('post', flat=True)
+
+    print(likes)
+ 
     if request.user.is_authenticated:
         return render(request, "network/index.html", {
-            "page_obj": page_obj
+            "page_obj": page_obj,
+            "likes": likes
         })
     else:
         return render(request, "network/login.html")
@@ -105,6 +110,10 @@ def editPost(request, postId):
         editPost.content = data["content"]
         editPost.save()
         return JsonResponse({'message': 'Edit successful', 'data': data['content']})
+    
+def likePost(request, postId):
+    user = User.objects.get(pk=request.user)
+    post = Post.objects.get(pk=postId)
 
 def login_view(request):
     if request.method == "POST":
