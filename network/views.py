@@ -16,15 +16,20 @@ def index(request):
     paginator = Paginator(all_post, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
-    likes = Like.objects.filter(user=request.user).values_list('post', flat=True)
 
-    print(likes)
+    allLikes = Like.objects.all()
+    userLikes = []
+
+    for like in allLikes:
+        if request.user.id == like.user.id:
+            userLikes.append(like.post.id)
+
+    print(f"likes = {userLikes}")
  
     if request.user.is_authenticated:
         return render(request, "network/index.html", {
             "page_obj": page_obj,
-            "likes": likes
+            "userLikes": userLikes
         })
     else:
         return render(request, "network/login.html")
@@ -110,10 +115,20 @@ def editPost(request, postId):
         editPost.content = data["content"]
         editPost.save()
         return JsonResponse({'message': 'Edit successful', 'data': data['content']})
-    
-def likePost(request, postId):
-    user = User.objects.get(pk=request.user)
-    post = Post.objects.get(pk=postId)
+
+def remove_like(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    user = User.objects.get(pk=request.user.id)
+    like = Like.objects.filter(user=user, post=post)
+    like.delete()
+    return JsonResponse({"message": "Like removed!"})
+
+def add_like(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    user = User.objects.get(pk=request.user.id)
+    newLike = Like(user=user, post=post)
+    newLike.save()
+    return JsonResponse({"message": "Like added!"})
 
 def login_view(request):
     if request.method == "POST":

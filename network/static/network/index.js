@@ -57,7 +57,34 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-function likeHandler(id) {
-    const likeBtn = document.getElementById(`likeBtn${id}`)
-
+function likeHandler(id, userLikes) {
+    const btn = document.getElementById(`likeBtn${id}`);
+    
+    if(userLikes.indexOf(id) >= 0){
+        var liked = true;
+    } else {
+        var liked = false;
+    }
+    
+    if(liked === true){
+        fetch(`remove_like/${id}`)
+        .then(response => response.json())
+        .then(result => {
+            if (result.message === "Like removed!") {
+                btn.classList.remove('fa-solid', 'text-danger')
+                btn.classList.add('fa-regular')
+            }
+        })
+    } else {
+        fetch(`add_like/${id}`)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result.message)
+            if (result.message === "Like added!") {
+                btn.classList.remove('fa-regular')
+                btn.classList.add('fa-solid', 'text-danger')
+            }
+        })
+    }
+    liked = !liked
 }

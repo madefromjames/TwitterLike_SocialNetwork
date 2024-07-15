@@ -33,7 +33,11 @@
                     <button class="btn btn-primary btn-sm m-2" id="save{{ post.id }}" style="display: none;" onclick="submitHandler({{ post.id }})">Save</button>
                 </div>
                 {% endif %}
-                <button id="likeBtn{{ post.id }}" class="btn {% if post.id in likes %} fa-solid text-danger {% else %} fa-regular {% endif %} fa-heart" onclick="likeHandler({{ post.id }})"></button>
+                {% if post.id in userLikes %}
+                <button id="likeBtn{{ post.id }}" class="btn fa-solid text-danger fa-heart" onclick="likeHandler({{ post.id }}, {{ userLikes }})"></button>
+                {% else %}
+                <button id="likeBtn{{ post.id }}" class="btn fa-regular fa-heart" onclick="likeHandler({{ post.id }}, {{ userLikes }})"></button>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
