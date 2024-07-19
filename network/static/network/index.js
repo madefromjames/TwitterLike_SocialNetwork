@@ -59,20 +59,22 @@ function getCookie(name) {
 
 function likeHandler(id, userLikes) {
     const btn = document.getElementById(`likeBtn${id}`);
+    const likeCountElement = document.getElementById(`likeCount${id}`);
+    let liked = btn.classList.contains('fa-solid');
     
-    if(userLikes.indexOf(id) >= 0){
-        var liked = true;
-    } else {
-        var liked = false;
-    }
-    
-    if(liked === true){
+    if(liked){
         fetch(`remove_like/${id}`)
         .then(response => response.json())
         .then(result => {
+            console.log(result.message)
             if (result.message === "Like removed!") {
-                btn.classList.remove('fa-solid', 'text-danger')
-                btn.classList.add('fa-regular')
+                btn.classList.remove('fa-solid', 'text-danger');
+                btn.classList.add('fa-regular');
+                const index = userLikes.indexOf(id);
+                if (index > -1) {
+                    userLikes.splice(index, 1);
+                }
+                likeCountElement.textContent = result.like_count;
             }
         })
     } else {
@@ -81,10 +83,11 @@ function likeHandler(id, userLikes) {
         .then(result => {
             console.log(result.message)
             if (result.message === "Like added!") {
-                btn.classList.remove('fa-regular')
-                btn.classList.add('fa-solid', 'text-danger')
+                btn.classList.remove('fa-regular');
+                btn.classList.add('fa-solid', 'text-danger');
+                userLikes.push(id);
+                likeCountElement.textContent = result.like_count;
             }
         })
     }
-    liked = !liked
 }

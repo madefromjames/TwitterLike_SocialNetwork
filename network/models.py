@@ -14,6 +14,9 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.user} posted {self.content} on {self.date.strftime('%b %d %Y, %H:%M:%S')}"
     
+    def likes_count(self):
+        return self.postLike.count()
+    
 class Follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
     followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
