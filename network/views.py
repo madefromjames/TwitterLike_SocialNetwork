@@ -119,17 +119,17 @@ def editPost(request, postId):
 def remove_like(request, post_id):
     post = Post.objects.get(pk=post_id)
     user = User.objects.get(pk=request.user.id)
-    like_count = post.likes_count()
     like = Like.objects.filter(user=user, post=post)
     like.delete()
+    like_count = post.likes_count()
     return JsonResponse({"message": "Like removed!", 'like_count': like_count})
 
 def add_like(request, post_id):
     post = Post.objects.get(pk=post_id)
     user = User.objects.get(pk=request.user.id)
-    like_count = post.likes_count()
     newLike = Like(user=user, post=post)
     newLike.save()
+    like_count = post.likes_count()
     return JsonResponse({"message": "Like added!", 'like_count': like_count})
 
 def login_view(request):

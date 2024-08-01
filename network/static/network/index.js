@@ -26,7 +26,6 @@ function toggleBtn(postId) {
 
 function submitHandler(id) {
     const textArea = document.getElementById(`textArea${id}`).value;
-    console.log(`editPost/${id}`)
     fetch(`editPost/${id}`, {
         method: 'PUT',
         headers: {
@@ -66,7 +65,6 @@ function likeHandler(id, userLikes) {
         fetch(`remove_like/${id}`)
         .then(response => response.json())
         .then(result => {
-            console.log(result.message)
             if (result.message === "Like removed!") {
                 btn.classList.remove('fa-solid', 'text-danger');
                 btn.classList.add('fa-regular');
@@ -75,19 +73,26 @@ function likeHandler(id, userLikes) {
                     userLikes.splice(index, 1);
                 }
                 likeCountElement.textContent = result.like_count;
+                console.log(`Like removed: ${result.like_count}`);
             }
         })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     } else {
         fetch(`add_like/${id}`)
         .then(response => response.json())
         .then(result => {
-            console.log(result.message)
             if (result.message === "Like added!") {
                 btn.classList.remove('fa-regular');
                 btn.classList.add('fa-solid', 'text-danger');
                 userLikes.push(id);
                 likeCountElement.textContent = result.like_count;
-            }
+                console.log(`Like added: ${result.like_count}`);
+            } 
         })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 }
