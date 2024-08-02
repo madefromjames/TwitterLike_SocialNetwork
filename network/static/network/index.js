@@ -26,7 +26,9 @@ function toggleBtn(postId) {
 
 function submitHandler(id) {
     const textArea = document.getElementById(`textArea${id}`).value;
-    fetch(`editPost/${id}`, {
+
+    baseUrl = `${window.location.origin}/`;
+    fetch(`${baseUrl}editPost/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -60,9 +62,13 @@ function likeHandler(id, userLikes) {
     const btn = document.getElementById(`likeBtn${id}`);
     const likeCountElement = document.getElementById(`likeCount${id}`);
     let liked = btn.classList.contains('fa-solid');
+
+    // Construct a base url
+
+    const baseUrl = `${window.location.origin}/`
     
     if(liked){
-        fetch(`remove_like/${id}`)
+        fetch(`${baseUrl}remove_like/${id}`)
         .then(response => response.json())
         .then(result => {
             if (result.message === "Like removed!") {
@@ -80,7 +86,7 @@ function likeHandler(id, userLikes) {
             console.error('Error:', error);
         });
     } else {
-        fetch(`add_like/${id}`)
+        fetch(`${baseUrl}add_like/${id}`)
         .then(response => response.json())
         .then(result => {
             if (result.message === "Like added!") {

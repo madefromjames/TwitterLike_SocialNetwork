@@ -23,8 +23,6 @@ def index(request):
     for like in allLikes:
         if request.user.id == like.user.id:
             userLikes.append(like.post.id)
-
-    print(f"likes = {userLikes}")
  
     if request.user.is_authenticated:
         return render(request, "network/index.html", {
@@ -47,6 +45,13 @@ def profile(request, user_id):
     except Follow.DoesNotExist:
         isFollowing = False
 
+    allLikes = Like.objects.all()
+    userLikes = []
+
+    for like in allLikes:
+        if request.user.id == like.user.id:
+            userLikes.append(like.post.id)
+
     paginator = Paginator(all_post, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -57,7 +62,8 @@ def profile(request, user_id):
         "following": following,
         "followers": followers,
         "isFollowing": isFollowing,
-        "user_profile": user
+        "user_profile": user,
+        "userLikes": userLikes
     })
 
 def following(request):
@@ -72,12 +78,20 @@ def following(request):
             if person.followed == post.user:
                 followingPost.append(post)
 
+    allLikes = Like.objects.all()
+    userLikes = []
+
+    for like in allLikes:
+        if request.user.id == like.user.id:
+            userLikes.append(like.post.id)
+
     paginator = Paginator(followingPost, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     return render(request, "network/following.html", {
-            "page_obj": page_obj
+            "page_obj": page_obj,
+            "userLikes": userLikes
         })
 
 def follow(request):

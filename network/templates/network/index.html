@@ -26,6 +26,14 @@
                 <p class="card-text" id="content{{ post.id }}">{{ post.content }}</p>
                 <textarea rows="3" class="form-control" id="textArea{{ post.id }}" style="display: none;">{{ post.content }}</textarea>
                 <p class="card-text text-muted">{{ post.date }}</p>
+                <div class="d-flex align-items-center">
+                    {% if post.id in userLikes %}
+                    <button id="likeBtn{{ post.id }}" class="btn fa-solid text-danger fa-heart" onclick="likeHandler({{ post.id }}, {{ userLikes }})"></button>
+                    {% else %}
+                    <button id="likeBtn{{ post.id }}" class="btn fa-regular fa-heart" onclick="likeHandler({{ post.id }}, {{ userLikes }})"></button>
+                    {% endif %}
+                    <p class="card-text text-muted" id="likeCount{{ post.id }}">{{ post.likes_count }}</p>
+                </div>
                 {% if user == post.user %}
                 <div class="d-flex align-items-center">
                     <button class="btn btn-secondary btn-sm" id="edit{{ post.id }}"  onclick="toggleBtn({{ post.id }})">Edit</button>
@@ -33,14 +41,6 @@
                     <button class="btn btn-primary btn-sm m-2" id="save{{ post.id }}" style="display: none;" onclick="submitHandler({{ post.id }})">Save</button>
                 </div>
                 {% endif %}
-                <div class="d-flex align-items-center">
-                {% if post.id in userLikes %}
-                <button id="likeBtn{{ post.id }}" class="btn fa-solid text-danger fa-heart" onclick="likeHandler({{ post.id }}, {{ userLikes }})"></button>
-                {% else %}
-                <button id="likeBtn{{ post.id }}" class="btn fa-regular fa-heart" onclick="likeHandler({{ post.id }}, {{ userLikes }})"></button>
-                {% endif %}
-                <p class="card-text text-muted" id="likeCount{{ post.id }}">{{ post.likes_count }}</p>
-                </div>
             </div>
         </div>
         {% endfor %}
